@@ -1,0 +1,4 @@
+docker/mysql/data/
+src/task1/vendor/
+src/task3/vendor/
+.idea/

@@ -1,0 +1,33 @@
+Написать SQL-запросы для получения следующих данных:
+    a. Для заданного списка товаров получить названия всех категорий, в которых представлены товары:
+        SELECT c.title FROM product_category pc
+        INNER JOIN category c ON pc.category_id = c.id
+        WHERE pc.product_id IN (1,5,7)
+        GROUP BY c.title
+
+    b. Для заданной категории получить список предложений всех товаров из этой категории и ее
+    дочерних категорий:
+        SELECT p.title FROM category c, product_category pc, product p
+        WHERE c.id = 11
+        AND c.rgt >= pc.category_id
+        AND c.lft <= pc.category_id
+        AND p.id = pc.product_id
+        GROUP BY p.title
+
+    c. Для заданного списка категорий получить количество предложений товаров в каждой категории:
+        SELECT category_id, COUNT(product_id) FROM product_category WHERE category_id IN (4,11,17) GROUP BY category_id
+
+    d. Для заданного списка категорий получить общее количество уникальных предложений товара:
+        SELECT category_id, COUNT(pc.product_id) FROM product_category pc
+        WHERE pc.category_id IN (4,11,14)
+        AND pc.product_id NOT IN (
+        		SELECT subpc.product_id FROM product_category subpc
+        		WHERE subpc.category_id IN (4,11,14)
+        		AND subpc.category_id != pc.category_id
+        )
+        GROUP BY pc.category_id
+
+    e. Для заданной категории получить ее полный путь в дереве (breadcrumb, «хлебные крошки»):
+        SELECT pc.* FROM category cc, category pc
+        WHERE cc.id = 11
+        AND pc.lft <= cc.lft AND pc.rgt >= cc.rgt
